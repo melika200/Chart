@@ -9,23 +9,25 @@ const Home: React.FC = () => {
 
   return (
     <>
-       <Typography  className={classes.header} variant="h6" sx={{maxWidth:"lg", mx:"auto"}}>
-          به سامانه اعتبارسنجی پارسیان(ساپ) خوش آمدید
-        </Typography>
+      <Typography
+        className={classes.header}
+        variant="h6"
+        sx={{ maxWidth: "lg", mx: "auto" }}
+      >
+        به سامانه اعتبارسنجی پارسیان(ساپ) خوش آمدید
+      </Typography>
       <Box
         sx={{
           padding: 4,
-          backgroundColor: "background.paper",
           maxWidth: "lg",
-          margin: "1.75rem auto",
+          margin: "0.75rem auto",
         }}
       >
-     
-        <Grid container spacing={2} columns={10} className={classes.chart}>
-          <Grid size={5}>
+        <Grid container spacing={2} columns={10} >
+          <Grid size={5} sx={{ backgroundColor: "background.paper"}} className={classes.chartitem}>
             <Chartdata />
           </Grid>
-          <Grid size={5}>
+          <Grid size={5} sx={{ backgroundColor: "background.paper" }} className={classes.chartitem}>
             <CircleChart />
           </Grid>
         </Grid>

@@ -1,18 +1,21 @@
 import { makeStyles } from "@mui/styles";
 
 const useStyles = makeStyles(() => ({
-  chart: {
-    marginTop: "1.5rem",
-  },
+ 
   header: {
     textAlign: "center",
     fontFamily: "fantasy",
     display: "flex",
     justifyContent: "center",
     backgroundColor: "#fff",
-    padding:"6px 33px",
-    marginTop:'1.2rem'
+    padding:"6px 6px",
+    marginTop:'1.2rem',
+    borderRadius:'10px'
     
   },
+  chartitem:{
+   padding:'30px',
+   borderRadius:'20px'
+  }
 }));
 export default useStyles;
