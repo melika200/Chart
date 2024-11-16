@@ -1,34 +1,27 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
+import { useQuery } from "react-query";
+import axios from "axios";
 import Chart from '../../Components/Chart/Chart';
 
+const fetchChartData = async () => {
+  const response = await axios.get("https://api.coincap.io/v2/assets/?limit=10");
+  return response.data.data.map((item: any) => ({
+    name: item.name,
+    priceUsd: parseFloat(item.priceUsd),
+  }));
+};
+
 const Chartdata: React.FC = () => {
-    const [chart, setChart] = useState<{ name: string; priceUsd: number }[]>([]);
+  const { data: chart, error, isLoading } = useQuery("chartData", fetchChartData);
 
-    useEffect(() => {
-        const fetchdata = async () => {
-            try {
-                const response = await fetch("https://api.coincap.io/v2/assets/?limit=10");
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                const data = await response.json();
-                console.log(data);
-                setChart(data.data.map((item: any) => ({
-                    name: item.name,
-                    priceUsd: parseFloat(item.priceUsd) 
-                })));
-            } catch (error) {
-                console.error("Failed to fetch data:", error);
-            }
-        };
-        fetchdata();
-    }, []);
+  if (isLoading) return <p>Loading...</p>;
+  if (error) return <p>Failed to fetch data</p>;
 
-    return (
-        <>
-            {chart.length > 0 ? <Chart chart={chart} /> : <p>Loading...</p>}
-        </>
-    );
+  return (
+    <>
+      {chart && chart.length > 0 ? <Chart chart={chart} /> : <p>No data available</p>}
+    </>
+  );
 };
 
 export default Chartdata;

@@ -26,8 +26,8 @@ const Chart: React.FC<ChartProps> = ({ chart }) => {
         <YAxis />
         <Tooltip />
         <Legend />
-        <Bar dataKey="name" fill="#a29bfe" />
-        <Bar dataKey="priceUsd" fill="#6c5ce7" />
+        <Bar dataKey="name" fill="#01a3a4" />
+        <Bar dataKey="priceUsd" fill="#00d2d3" />
       </BarChart>
     </ResponsiveContainer>
   );
