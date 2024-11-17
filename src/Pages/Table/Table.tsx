@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import TableModal from "./Tablemodal";
+import { Box, Typography, Modal, TextField, Button, Grid } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -7,10 +9,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { Box, Typography, Modal, TextField, Button, Grid } from "@mui/material";
 import { FaTrashAlt, FaRegEdit, FaBookOpen } from "react-icons/fa";
-import Tablemodal from "./Tablemodal";
-import "./Table.css";
 import Tabledata from "../../Services/Tableurl/Tabledata";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -37,18 +36,24 @@ export default function CustomizedTables() {
   const [editRow, setEditRow] = useState<any>(null);
   const [open, setOpen] = useState(false);
 
+  const addRow = (row: any) => {
+    setRows((prevRows) => [...prevRows, row]);
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await Tabledata.get("/");
-        const data = response.data.data; 
+        const { data } = response.data;
+
         const formattedData = data.map((item: any) => ({
           id: item.id,
           title: item.pName, 
-          summary: item.url,
-          text: item.name,
-          recordDate: item.id,
+          summary: item.issuer || item.url, 
+          text: item.description || item.name, 
+          recordDate: item.recordDate || new Date().toLocaleDateString(), 
         }));
+
         setRows(formattedData);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -76,6 +81,7 @@ export default function CustomizedTables() {
     setRows(rows.map((row) => (row.id === editRow.id ? editRow : row)));
     handleEditClose();
   };
+  
 
   return (
     <>
@@ -92,7 +98,7 @@ export default function CustomizedTables() {
         }}
       >
         <Box sx={{ backgroundColor: "#b6631a", borderRadius: "6px" }}>
-          <Tablemodal />
+          <TableModal addRow={addRow} />
         </Box>
         <Box
           sx={{
@@ -136,6 +142,7 @@ export default function CustomizedTables() {
                         onClick={() => handleEditOpen(row)}
                       />
                       <FaTrashAlt
+                      
                         className="delete"
                         onClick={() => handleDelete(row.id)}
                       />
