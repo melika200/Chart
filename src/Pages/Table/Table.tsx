@@ -1,218 +1,222 @@
-import React, { useEffect, useState } from "react";
-import TableModal from "./Tablemodal";
-import { Box, Typography, Modal, TextField, Button, Grid } from "@mui/material";
-import { styled } from "@mui/material/styles";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell, { tableCellClasses } from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
+import React from "react";
+import {
+  Box,
+  Typography,
+  Modal,
+  TextField,
+  Button,
+  TableContainer,
+  Table,
+  TableHead,
+  TableRow,
+  TableCell,
+  Paper,
+  TableBody,
+} from "@mui/material";
+import { Grid } from "@mui/material";
 import { FaTrashAlt, FaRegEdit, FaBookOpen } from "react-icons/fa";
-import Tabledata from "../../Services/Tableurl/Tabledata";
+import TableModal from "./Tablemodal";
+import useTableStyles from "./Tablestyle";
+import useCustomizedTable from "../../Hooks/Usetable";
+import { Controller, useForm } from "react-hook-form";
+import useDeletetable from "../../Hooks/Deletetable";
 
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
-  [`&.${tableCellClasses.head}`]: {
-    backgroundColor: theme.palette.common.black,
-    color: theme.palette.common.white,
-  },
-  [`&.${tableCellClasses.body}`]: {
-    fontSize: 14,
-  },
-}));
+interface Row {
+  id: string;
+  title: string;
+  recordDateFa: string;
+  position: string;
+}
+interface FormValues {
+  title: string;
+  position: string;
+  recordDateFa: string;
+}
 
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
-  "&:nth-of-type(odd)": {
-    backgroundColor: theme.palette.action.hover,
-  },
-  "&:last-child td, &:last-child th": {
-    border: 0,
-  },
-}));
-
-export default function CustomizedTables() {
-  const [rows, setRows] = useState([]);
-  const [editRow, setEditRow] = useState<any>(null);
-  const [open, setOpen] = useState(false);
-
-  const addRow = (row: any) => {
-    setRows((prevRows) => [...prevRows, row]);
-  };
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await Tabledata.get("/");
-        const { data } = response.data;
-
-        const formattedData = data.map((item: any) => ({
-          id: item.id,
-          title: item.pName, 
-          summary: item.issuer || item.url, 
-          text: item.description || item.name, 
-          recordDate: item.recordDate || new Date().toLocaleDateString(), 
-        }));
-
-        setRows(formattedData);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    fetchData();
-  }, []);
-
+const CustomizedTables: React.FC = () => {
+  const classes = useTableStyles();
+  const { control, handleSubmit, reset, setValue } = useForm<FormValues>({
+    defaultValues: { title: "", position: "", recordDateFa: "" },
+  });
+  const { mutate } = useDeletetable();
   const handleDelete = (id: string) => {
-    setRows(rows.filter((row) => row.id !== id));
+    mutate(id);
+  };
+  const {
+    rows,
+    editRow,
+    open,
+    addRow,
+    handleEditOpen,
+    handleEditClose,
+    handleSaveEdit,
+    setEditRow,
+  } = useCustomizedTable();
+
+  const onSubmit = (data: FormValues) => {
+    setEditRow((prev) => (prev ? { ...prev, ...data } : null));
+    handleSaveEdit();
+    reset();
   };
 
-  const handleEditOpen = (row: any) => {
-    setEditRow(row);
-    setOpen(true);
-  };
-
-  const handleEditClose = () => {
-    setEditRow(null);
-    setOpen(false);
-  };
-
-  const handleSaveEdit = () => {
-    setRows(rows.map((row) => (row.id === editRow.id ? editRow : row)));
-    handleEditClose();
-  };
-  
+  React.useEffect(() => {
+    if (editRow) {
+      setValue("title", editRow.title);
+      setValue("position", editRow.position);
+      setValue("recordDateFa", editRow.recordDateFa);
+    }
+  }, [editRow, setValue]);
 
   return (
     <>
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "space-between",
-          backgroundColor: "#fff",
-          margin: "1rem 0",
-          padding: "15px",
-          borderRadius: "10px",
-        }}
-      >
+      <Box className={classes.container}>
         <Box sx={{ backgroundColor: "#b6631a", borderRadius: "6px" }}>
           <TableModal addRow={addRow} />
         </Box>
         <Box
-          sx={{
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-            textAlign: "center",
-          }}
+          sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}
         >
           <Typography variant="h6" sx={{ marginRight: "5px" }}>
             لیست مدارک تحصیلی
           </Typography>
-          <FaBookOpen className="book" />
+          <FaBookOpen style={{ color: "#fff", fontSize: "20px" }} />
         </Box>
       </Box>
       <TableContainer component={Paper} sx={{ direction: "rtl" }}>
         <Table sx={{ minWidth: 700 }} aria-label="customized table">
           <TableHead>
             <TableRow>
-              <StyledTableCell align="right">مقطع تحصیلی</StyledTableCell>
-              <StyledTableCell align="right">ارگان صادرکننده</StyledTableCell>
-              <StyledTableCell align="right">تاریخ</StyledTableCell>
-              <StyledTableCell align="right">توضیحات</StyledTableCell>
-              <StyledTableCell align="right">عملیات</StyledTableCell>
+              <TableCell className={classes.tableHeader} align="right">
+                مقطع تحصیلی
+              </TableCell>
+              <TableCell className={classes.tableHeader} align="right">
+                وضعیت
+              </TableCell>
+              <TableCell className={classes.tableHeader} align="right">
+                تاریخ
+              </TableCell>
+              <TableCell className={classes.tableHeader} align="right">
+                عملیات
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.map((row) => (
-              <StyledTableRow key={row.id}>
-                <StyledTableCell align="right" component="th" scope="row">
+            {rows.map((row: Row) => (
+              <TableRow key={row.id}>
+                <TableCell align="right" component="th" scope="row">
                   {row.title}
-                </StyledTableCell>
-                <StyledTableCell align="right">{row.summary}</StyledTableCell>
-                <StyledTableCell align="right">{row.text}</StyledTableCell>
-                <StyledTableCell align="right">{row.recordDate}</StyledTableCell>
-                <StyledTableCell align="right">
+                </TableCell>
+                <TableCell align="right">{row.position}</TableCell>
+                <TableCell align="right">{row.recordDateFa}</TableCell>
+                <TableCell align="right">
                   <Box>
                     <Grid item xs={8}>
                       <FaRegEdit
-                        className="edit"
+                        className={classes.edit}
                         onClick={() => handleEditOpen(row)}
                       />
                       <FaTrashAlt
-                      
-                        className="delete"
+                        className={classes.delete}
                         onClick={() => handleDelete(row.id)}
                       />
                     </Grid>
                   </Box>
-                </StyledTableCell>
-              </StyledTableRow>
+                </TableCell>
+              </TableRow>
             ))}
           </TableBody>
         </Table>
       </TableContainer>
       <Modal open={open} onClose={handleEditClose}>
-        <Box
-          sx={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            width: 400,
-            bgcolor: "background.paper",
-            border: "2px solid #000",
-            boxShadow: 24,
-            p: 4,
-          }}
-        >
+        <Box className={classes.modaledit}>
           {editRow && (
-            <>
-              <TextField
-                label="مقطع تحصیلی"
-                value={editRow.title}
-                onChange={(e) =>
-                  setEditRow({ ...editRow, title: e.target.value })
-                }
-                fullWidth
-                margin="normal"
+            <form
+              onSubmit={handleSubmit(onSubmit)}
+              noValidate
+              autoComplete="off"
+            >
+              <Controller
+                name="title"
+                control={control}
+                rules={{ required: "مقطع تحصیلی is required" }}
+                render={({ field, fieldState }) => (
+                  <TextField
+                    {...field}
+                    label="مقطع تحصیلی"
+                    error={!!fieldState.error}
+                    helperText={
+                      fieldState.error ? fieldState.error.message : null
+                    }
+                    fullWidth
+                    margin="normal"
+                    InputProps={{
+                      style: { textAlign: "right" },
+                      inputProps: { style: { textAlign: "right" } },
+                    }}
+                  />
+                )}
               />
-              <TextField
-                label="ارگان صادرکننده"
-                value={editRow.summary}
-                onChange={(e) =>
-                  setEditRow({ ...editRow, summary: e.target.value })
-                }
-                fullWidth
-                margin="normal"
+              <Controller
+                name="position"
+                control={control}
+                rules={{ required: "وضعیت is required" }}
+                render={({ field, fieldState }) => (
+                  <TextField
+                    {...field}
+                    label="وضعیت"
+                    error={!!fieldState.error}
+                    helperText={
+                      fieldState.error ? fieldState.error.message : null
+                    }
+                    fullWidth
+                    margin="normal"
+                    InputProps={{
+                      style: { textAlign: "right" },
+                      inputProps: { style: { textAlign: "right" } },
+                    }}
+                  />
+                )}
               />
-              <TextField
-                label="تاریخ"
-                value={editRow.text}
-                onChange={(e) =>
-                  setEditRow({ ...editRow, text: e.target.value })
-                }
-                fullWidth
-                margin="normal"
+              <Controller
+                name="recordDateFa"
+                control={control}
+                rules={{
+                  required: "تاریخ is required",
+                  pattern: {
+                    value: /^\d{4}-\d{2}-\d{2}$/,
+                    message: "تاریخ must be in the format YYYY-MM-DD",
+                  },
+                }}
+                render={({ field, fieldState }) => (
+                  <TextField
+                    {...field}
+                    label="تاریخ"
+                    error={!!fieldState.error}
+                    helperText={
+                      fieldState.error ? fieldState.error.message : null
+                    }
+                    fullWidth
+                    margin="normal"
+                    InputProps={{
+                      style: { textAlign: "right" },
+                      inputProps: { style: { textAlign: "right" } },
+                    }}
+                  />
+                )}
               />
-              <TextField
-                label="توضیحات"
-                value={editRow.recordDate}
-                onChange={(e) =>
-                  setEditRow({ ...editRow, recordDate: e.target.value })
-                }
-                fullWidth
-                margin="normal"
-              />
-              <Button onClick={handleSaveEdit} variant="contained">
+              <Button
+                type="submit"
+                variant="contained"
+                className={classes.saveButton}
+              >
                 Save
               </Button>
-            </>
+            </form>
           )}
         </Box>
       </Modal>
     </>
   );
-}
+};
+
+export default CustomizedTables;
