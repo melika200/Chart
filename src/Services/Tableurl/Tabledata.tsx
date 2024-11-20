@@ -1,27 +1,33 @@
 import axios from "axios";
-
-const tokenData = localStorage.getItem("Token");
-const accesstokendata = tokenData ? JSON.parse(tokenData) : null;
-console.log(accesstokendata);
-const accessToken = accesstokendata?.value?.tokens?.accesstoken;
-if (!accessToken) {
-  console.error("Access token is missing or invalid");
-}
+import { store } from '../../Auth/Store'; // Import your Redux store
+import { logout } from "../../Auth/Authslice";
 
 const Tabledata = axios.create({
   baseURL: "https://sit-bnpl.saminray.com/",
   headers: {
     accept: "text/plain",
     BusinessKey: "1da5ce01-7491-44a2-a823-2f4734ef0aef",
-    Authorization: `Bearer ${accessToken}`,
   },
 });
+
+Tabledata.interceptors.request.use(
+  (config) => {
+    const state = store.getState();
+    const accessToken = state.auth.user?.value?.tokens?.accesstoken;
+    if (accessToken) {
+      config.headers['Authorization'] = `Bearer ${accessToken}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
 
 Tabledata.interceptors.response.use(
   (response) => response,
   async (error) => {
     if (error.response.status === 401) {
       console.error("Unauthorized access - 401");
+      store.dispatch(logout()); 
     }
     return Promise.reject(error);
   }

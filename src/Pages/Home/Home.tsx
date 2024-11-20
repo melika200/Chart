@@ -44,11 +44,13 @@ const Home: React.FC = () => {
         sx={{
           padding: 4,
           maxWidth: "lg",
-          margin: "0.75rem auto",
+          margin: "1.75rem auto",
+          boxShadow:"3" ,
+          borderRadius:"20px"
         }}
       >
         <Grid container spacing={2} columns={10}>
-          <Grid xs={5} sx={{ backgroundColor: "background.paper" }} className={classes.chartitem}>
+          <Grid xs={5} sx={{ backgroundColor: "background.paper"}} className={classes.chartitem}>
             <Chartdata />
           </Grid>
           <Grid xs={5} sx={{ backgroundColor: "background.paper"}} className={classes.chartitem}>

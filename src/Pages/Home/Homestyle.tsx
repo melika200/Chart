@@ -14,7 +14,7 @@ const useStyles = makeStyles(() => ({
     
   },
   chartitem:{
-   padding:'30px',
+   padding:'30px 5px',
    borderRadius:'20px'
   }
 }));

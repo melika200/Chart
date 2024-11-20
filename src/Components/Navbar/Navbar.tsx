@@ -33,8 +33,8 @@ export default function NavbarItem() {
       <Container>
         <Navbar.Brand href="#home" className="me-auto">بانک پارسیان</Navbar.Brand>
         <Nav className="ms-auto">
-          <NavLink className="nav-link" to="/">جدول</NavLink>
-          <NavLink className="nav-link" to="/chart">چارت</NavLink>
+          <NavLink className="nav-link" to="/jadval">جدول</NavLink>
+          <NavLink className="nav-link" to="/">چارت</NavLink>
         </Nav>
         <Nav>
           {isAuthenticated ? (

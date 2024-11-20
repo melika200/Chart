@@ -17,6 +17,7 @@ const useCustomizedTable = () => {
     setRows((prevRows) => [...prevRows, row]);
   };
 
+  
   useEffect(() => {
     const fetchData = async () => {
       const response = await Tabledata.get('/merchantnew/News/Search?_page=1&_limit=10');
