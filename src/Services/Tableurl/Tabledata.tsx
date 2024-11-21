@@ -7,7 +7,7 @@ const Tabledata = axios.create({
   headers: {
     accept: "text/plain",
     BusinessKey: "1da5ce01-7491-44a2-a823-2f4734ef0aef",
-  },
+  }
 });
 
 Tabledata.interceptors.request.use(

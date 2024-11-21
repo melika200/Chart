@@ -33,33 +33,37 @@ export const Jadval: React.FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const fetchData = async () => {
+    try {
+      const response = await Tabledata.get(
+          "/merchantnew/News/Search?_page=1&_limit=10"
+      );
+      const formattedData: RowData[] = response.data.value.data.map(
+          (item: any) => ({
+            id: item.id,
+            title: item.title,
+            recordDateFa: item.recordDateFa,
+            position: item.isActive ? "فعال" : "غیر فعال",
+          })
+      );
+      setRows(formattedData);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
   useEffect(() => {
     dispatch(checkAuth());
   }, [dispatch]);
 
   useEffect(() => {
     if (isAuthenticated) {
-      const fetchData = async () => {
-        try {
-          const response = await Tabledata.get(
-            "/merchantnew/News/Search?_page=1&_limit=10"
-          );
-          const formattedData: RowData[] = response.data.value.data.map(
-            (item: any) => ({
-              id: item.id,
-              title: item.title,
-              recordDateFa: item.recordDateFa,
-              position: item.isActive ? "فعال" : "غیر فعال",
-            })
-          );
-          setRows(formattedData);
-        } catch (error) {
-          console.error("Error fetching data:", error);
-        }
-      };
+
       fetchData();
     }
   }, [isAuthenticated]);
+
+
 
   if (!isAuthenticated) {
     return <Typography>Please log in to view this content.</Typography>;
@@ -70,6 +74,7 @@ export const Jadval: React.FC = () => {
     if (confirm) {
       try {
         await axios.delete(`https://sit-bnpl.saminray.com/merchantnew/NewsGroup/ChangeStatus/${id}`);
+        fetchData();
         setRows(rows.filter(row => row.id !== id));
         navigate('/jadval');
       } catch (err) {

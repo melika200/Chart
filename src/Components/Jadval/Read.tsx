@@ -11,11 +11,15 @@ import {
 import Tabledata from '../../Services/Tableurl/Tabledata';
 
 interface DataType {
-  id: string;
+  id: number;
+  newsGroupId:number;
   title: string;
   summary: string;
   picture: string;
   text: string;
+  isActive: boolean;
+  recordDateFa:string;
+  recordTime:string;
 }
 
 export const ReadTable: React.FC = () => {
@@ -25,8 +29,9 @@ export const ReadTable: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const result = await Tabledata.get(`/merchantnew/News/${id}`);
-        setData(result.data);
+        const result = await Tabledata.get(`/merchantnew/News/Get/${id}`);
+        setData(result.data.value);
+        console.log(result.data.value)
       } catch (error) {
         console.error('Error fetching data:', error);
       }

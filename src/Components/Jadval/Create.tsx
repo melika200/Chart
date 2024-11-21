@@ -31,7 +31,8 @@ type FormField = {
   title: string;
   summary: string;
   text: string;
-  image: File | null;
+  image: string;
+  newsGroupId:number
 };
 
 export const Createtable: React.FC = () => {
@@ -42,14 +43,30 @@ export const Createtable: React.FC = () => {
     setValue,
     formState: { errors },
   } = useForm<FormField>();
+  const [uploadedImage, setUploadedImage] = useState<string | null>(null);
+
+  const convertFileToBase64 = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = (error) => reject(error);
+    });
+  };
+
 
   const onSubmit: SubmitHandler<FormField> = async (data) => {
+    // if (data.image) {
+    //   const base64Image = await convertFileToBase64(data.image);
+    //   data.image = base64Image; // تبدیل به رشته
+    // }
     const formData = new FormData();
     formData.append("title", data.title);
     formData.append("summary", data.summary);
     formData.append("text", data.text);
+    formData.append("newsGroupId", 1);
     if (data.image) {
-      formData.append("image", data.image);
+      formData.append("picture", "hhhhhhhhh");
     }
 
     try {
@@ -61,6 +78,25 @@ export const Createtable: React.FC = () => {
       navigate("/");
     } catch (err) {
       console.error(err);
+    }
+  };
+  //
+  // const handleSubmit = () => {
+  //
+  // }
+
+  const handleFileChange = async (files: File[]) => {
+    if (files && files[0]) {
+      const formData = new FormData();
+      formData.append("file", files[0]); // ارسال فایل به سرور
+
+      try {
+        const response = await Tabledata.post("/FileManager/UploadFile", formData); // آدرس API آپلود
+        setUploadedImage(response.data.string); // ذخیره رشته دریافتی
+        setValue("image", response.data.string); // ثبت رشته در فرم
+      } catch (err) {
+        console.error("Upload failed:", err);
+      }
     }
   };
 
@@ -156,9 +192,10 @@ export const Createtable: React.FC = () => {
                 <DropzoneArea
                   acceptedFiles={["image/*"]}
                   dropzoneText="Drag and drop an image here or click"
-                  onChange={(files) => {
-                    if (files[0]) {
-                      setValue("image", files[0]);
+                  onChange={
+                  (files) => {
+                    if (files && files.length > 0) {
+                      setValue("image", "test");
                     }
                   }}
                   classes={{ root: "custom-dropzone" }}

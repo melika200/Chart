@@ -24,10 +24,15 @@ const StyledLink = styled(Link)({
 });
 
 type DataType = {
+  id: number;
+  newsGroupId: number;
   title: string;
   summary: string;
-  image: string;
+  picture: string;
   text: string;
+  isActive: boolean;
+  recordDateFa: string;
+  recordTime: string;
 };
 
 export const Updatetable: React.FC = () => {
@@ -36,18 +41,23 @@ export const Updatetable: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [values, setValues] = useState({
-    title: "",
-    summary: "",
-    image: "",
-    text: ""
+    title: '',
+    summary: '',
+    image: '',
+    text: '',
   });
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const result = await Tabledata.get(`/merchantnew/News/${id}`);
-        setData(result.data);
-        setValues(result.data); 
+        const result = await Tabledata.get(`/merchantnew/News/Get/${id}`);
+        setData(result.data.value);
+        setValues({
+          title: result.data.value.title || '',
+          summary: result.data.value.summary || '',
+          image: result.data.value.picture || '',
+          text: result.data.value.text || '',
+        });
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -59,16 +69,19 @@ export const Updatetable: React.FC = () => {
   const handleUpdate = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    const formData = new FormData();
-    formData.append('title', values.title);
-    formData.append('summary', values.summary);
-    formData.append('text', values.text);
-    if (image) {
-      formData.append('image', image);
-    }
+    // Combine data from `values` and `data`
+    const payload = {
+      id: data?.id ?? 0,
+      newsGroupId: data?.newsGroupId ?? 0,
+      picture: "" ,
+      title: values.title || data?.title || '',
+      summary: values.summary || data?.summary || '',
+      text: values.text || data?.text || '',
+      isActive:data?.isActive,
+    };
 
     try {
-      const response = await Tabledata.put(`/merchantnew/News/Update/${id}`, formData);
+      const response = await Tabledata.put(`/merchantnew/News/Update`, payload);
       console.log(response);
       navigate('/jadval');
     } catch (err) {
@@ -81,59 +94,58 @@ export const Updatetable: React.FC = () => {
   }
 
   return (
-    <Box
-    
-      sx={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        minHeight: '100vh',
-        bgcolor: 'background.default',
-      }}
-    >
-      <Container maxWidth="sm">
-        <Paper elevation={3} sx={{ p: 4 }}>
-          <Typography variant="h4" gutterBottom>
-            Update User
-          </Typography>
-          <StyledForm onSubmit={handleUpdate}>
-            <TextField
-              label="Title"
-              variant="outlined"
-              fullWidth
-              value={values.title}
-              onChange={(e) => setValues({ ...values, title: e.target.value })}
-            />
-            <TextField
-              label="Text"
-              variant="outlined"
-              fullWidth
-              value={values.text}
-              onChange={(e) => setValues({ ...values, text: e.target.value })}
-            />
-            <TextField
-              label="Summary"
-              variant="outlined"
-              fullWidth
-              value={values.summary}
-              onChange={(e) => setValues({ ...values, summary: e.target.value })}
-            />
-            <DropzoneArea
-              acceptedFiles={['image/*']}
-              dropzoneText="Drag and drop an image here or click"
-              onChange={(files) => setImage(files[0])}
-            />
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
-              <Button variant="contained" color="primary" type="submit">
-                Update
-              </Button>
-              <StyledLink to="/jadval">
-                <Button variant="outlined">Back</Button>
-              </StyledLink>
-            </Box>
-          </StyledForm>
-        </Paper>
-      </Container>
-    </Box>
+      <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            minHeight: '100vh',
+            bgcolor: 'background.default',
+          }}
+      >
+        <Container maxWidth="sm">
+          <Paper elevation={3} sx={{ p: 4 }}>
+            <Typography variant="h4" gutterBottom>
+              Update User
+            </Typography>
+            <StyledForm onSubmit={handleUpdate}>
+              <TextField
+                  label="Title"
+                  variant="outlined"
+                  fullWidth
+                  value={values.title}
+                  onChange={(e) => setValues({ ...values, title: e.target.value })}
+              />
+              <TextField
+                  label="Text"
+                  variant="outlined"
+                  fullWidth
+                  value={values.text}
+                  onChange={(e) => setValues({ ...values, text: e.target.value })}
+              />
+              <TextField
+                  label="Summary"
+                  variant="outlined"
+                  fullWidth
+                  value={values.summary}
+                  onChange={(e) => setValues({ ...values, summary: e.target.value })}
+              />
+              <DropzoneArea
+                  acceptedFiles={['image/*']}
+                  dropzoneText="Drag and drop an image here or click"
+                  onChange={(files) => setImage(files[0])}
+              />
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
+                <Button variant="contained" color="primary" type="submit">
+                  Update
+                </Button>
+                <StyledLink to="/jadval">
+                  <Button variant="outlined">Back</Button>
+                </StyledLink>
+              </Box>
+            </StyledForm>
+          </Paper>
+        </Container>
+      </Box>
   );
 };
