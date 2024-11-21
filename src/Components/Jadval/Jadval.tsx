@@ -12,12 +12,12 @@ import {
   Typography,
   Container,
   Box,
-  Link as MUILink,
 } from "@mui/material";
 import Tabledata from "../../Services/Tableurl/Tabledata";
 import { selectIsAuthenticated, checkAuth } from "../../Auth/Authslice";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { MdReadMore, MdEdit, MdDelete } from "react-icons/md";
 
 interface RowData {
   id: string;
@@ -79,11 +79,11 @@ export const Jadval: React.FC = () => {
 
   return (
     <Container maxWidth="lg">
-      <Box sx={{ bgcolor: "background.paper", height: "100vh", py: 8 }}>
+      <Box sx={{ bgcolor: "background.paper", height: "100vh", py: 8, direction: "rtl" }}>
         <Typography variant="h4" component="h1" gutterBottom align="center">
-          List of Users
+          فهرست کاربران
         </Typography>
-        <TableContainer component={Paper} elevation={3}>
+        <TableContainer component={Paper} elevation={3} sx={{ bgcolor: "#fff" }}>
           <Box sx={{ display: "flex", justifyContent: "end", p: 2 }}>
             <Button
               component={Link}
@@ -91,16 +91,16 @@ export const Jadval: React.FC = () => {
               variant="contained"
               color="primary"
             >
-              Add +
+              افزودن +
             </Button>
           </Box>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
-              <TableRow>
-                <TableCell>مقطع تحصیلی</TableCell>
-                <TableCell>وضعیت</TableCell>
-                <TableCell>تاریخ</TableCell>
-                <TableCell>عملیات</TableCell>
+              <TableRow sx={{ bgcolor: "#f1f2f6" }}>
+                <TableCell sx={{ borderBottom: "1px solid gray", fontWeight: "bold" }}>مقطع تحصیلی</TableCell>
+                <TableCell sx={{ borderBottom: "1px solid gray", fontWeight: "bold" }}>وضعیت</TableCell>
+                <TableCell sx={{ borderBottom: "1px solid gray", fontWeight: "bold" }}>تاریخ</TableCell>
+                <TableCell sx={{ borderBottom: "1px solid gray", fontWeight: "bold" }}>عملیات</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -109,12 +109,11 @@ export const Jadval: React.FC = () => {
                   key={index}
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
-                  <TableCell component="th" scope="row">
-                    {row.id}
-                    {row.title}
+                  <TableCell component="th" scope="row" sx={{ textAlign: "right", direction: "rtl" }}>
+                    {row.id} {row.title}
                   </TableCell>
-                  <TableCell>{row.position}</TableCell>
-                  <TableCell>{row.recordDateFa}</TableCell>
+                  <TableCell sx={{ textAlign: "right", direction: "rtl" }}>{row.position}</TableCell>
+                  <TableCell sx={{ textAlign: "right", direction: "rtl" }}>{row.recordDateFa}</TableCell>
                   <TableCell>
                     <Button
                       component={Link}
@@ -122,8 +121,9 @@ export const Jadval: React.FC = () => {
                       variant="contained"
                       size="small"
                       sx={{ mr: 1 }}
+                      startIcon={<MdReadMore />}
                     >
-                      Read
+                      مشاهده
                     </Button>
                     <Button
                       component={Link}
@@ -131,16 +131,18 @@ export const Jadval: React.FC = () => {
                       variant="contained"
                       size="small"
                       sx={{ mr: 1 }}
+                      startIcon={<MdEdit />}
                     >
-                      Edit
+                      ویرایش
                     </Button>
                     <Button
                       onClick={() => handleDelete(row.id)}
                       variant="contained"
                       color="error"
                       size="small"
+                      startIcon={<MdDelete />}
                     >
-                      Delete
+                      حذف
                     </Button>
                   </TableCell>
                 </TableRow>

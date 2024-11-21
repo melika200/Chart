@@ -82,6 +82,7 @@ export const Updatetable: React.FC = () => {
 
   return (
     <Box
+    
       sx={{
         display: 'flex',
         justifyContent: 'center',
