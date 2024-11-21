@@ -18,6 +18,7 @@ import { selectIsAuthenticated, checkAuth } from "../../Auth/Authslice";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { MdReadMore, MdEdit, MdDelete } from "react-icons/md";
+import NavbarItem from "../Navbar/Navbar";
 
 interface RowData {
   id: string;
@@ -78,6 +79,8 @@ export const Jadval: React.FC = () => {
   };
 
   return (
+    <>
+    <NavbarItem/>
     <Container maxWidth="lg">
       <Box sx={{ bgcolor: "background.paper", height: "100vh", py: 8, direction: "rtl" }}>
         <Typography variant="h4" component="h1" gutterBottom align="center">
@@ -152,5 +155,6 @@ export const Jadval: React.FC = () => {
         </TableContainer>
       </Box>
     </Container>
+    </>
   );
 };
