@@ -9,6 +9,13 @@
     "lint": "eslint .",
     "preview": "vite preview"
   },
+  "proxy": "https://sit-bnpl.saminray.com",
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
   "dependencies": {
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",

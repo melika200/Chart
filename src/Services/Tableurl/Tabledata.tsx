@@ -1,5 +1,5 @@
 import axios from "axios";
-import { store } from '../../Auth/Store'; // Import your Redux store
+import { store } from '../../Auth/Store'; 
 import { logout } from "../../Auth/Authslice";
 
 const Tabledata = axios.create({
