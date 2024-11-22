@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   Box,
@@ -43,60 +42,25 @@ export const Createtable: React.FC = () => {
     setValue,
     formState: { errors },
   } = useForm<FormField>();
-  const [uploadedImage, setUploadedImage] = useState<string | null>(null);
-
-  const convertFileToBase64 = (file: File): Promise<string> => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result as string);
-      reader.onerror = (error) => reject(error);
-    });
-  };
-
 
   const onSubmit: SubmitHandler<FormField> = async (data) => {
-    // if (data.image) {
-    //   const base64Image = await convertFileToBase64(data.image);
-    //   data.image = base64Image; // تبدیل به رشته
-    // }
-    const formData = new FormData();
-    formData.append("title", data.title);
-    formData.append("summary", data.summary);
-    formData.append("text", data.text);
-    formData.append("newsGroupId", 1);
-    if (data.image) {
-      formData.append("picture", "hhhhhhhhh");
-    }
+    const payload = {
+      title: data.title,
+      summary: data.summary,
+      text: data.text,
+      newsGroupId: 2,
+      picture: "",
+    };
 
     try {
       const response = await Tabledata.post(
         "/merchantnew/News/Insert",
-        formData
+        payload
       );
       console.log(response);
-      navigate("/");
+      navigate("/jadval");
     } catch (err) {
       console.error(err);
-    }
-  };
-  //
-  // const handleSubmit = () => {
-  //
-  // }
-
-  const handleFileChange = async (files: File[]) => {
-    if (files && files[0]) {
-      const formData = new FormData();
-      formData.append("file", files[0]); // ارسال فایل به سرور
-
-      try {
-        const response = await Tabledata.post("/FileManager/UploadFile", formData); // آدرس API آپلود
-        setUploadedImage(response.data.string); // ذخیره رشته دریافتی
-        setValue("image", response.data.string); // ثبت رشته در فرم
-      } catch (err) {
-        console.error("Upload failed:", err);
-      }
     }
   };
 
@@ -195,7 +159,7 @@ export const Createtable: React.FC = () => {
                   onChange={
                   (files) => {
                     if (files && files.length > 0) {
-                      setValue("image", "test");
+                      setValue("image", "");
                     }
                   }}
                   classes={{ root: "custom-dropzone" }}
