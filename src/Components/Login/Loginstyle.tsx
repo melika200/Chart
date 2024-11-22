@@ -5,7 +5,6 @@ const useStyles = makeStyles({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#f5f5f5', 
     margin:"5rem auto"
   },
   card: {

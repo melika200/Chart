@@ -45,10 +45,10 @@ export const ReadTable: React.FC = () => {
   }
 
   return (
-    <Box sx={{ p: 3 }}>
+    <Box sx={{ p: 3 ,margin:"3rem auto",textAlign:"center",width:"45%"}}>
       <Card>
         <CardContent>
-          <Typography variant="h5" gutterBottom>
+          <Typography variant="h5" sx={{marginBottom:"10px"}} gutterBottom>
             Detail of User
           </Typography>
           <Grid container spacing={2}>

@@ -7,20 +7,20 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../Auth/Store';
 import Swal from 'sweetalert2';
 import { logout } from '../../Auth/Logout';
-import "./Navbar.css";
+import Navbarstyle from './Navbarstyle';
+
 
 export default function NavbarItem() {
   const dispatch = useDispatch();
   const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
-
-  const handleLogout = () => {
+  const navbarstyle = Navbarstyle();
+    const handleLogout = () => {
     Swal.fire({
-      title: 'Are you sure?',
-      text: 'Do you want to logout?',
+      text: 'مطمئن هستید که میخواید از سامانه خارج شوید؟',
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: 'Yes, logout',
-      cancelButtonText: 'No, stay logged in'
+      confirmButtonText: 'بله ،خروج',
+      cancelButtonText: 'خیر'
     }).then((result) => {
       if (result.isConfirmed) {
         dispatch(logout());
@@ -31,16 +31,16 @@ export default function NavbarItem() {
   return (
     <Navbar bg="light" data-bs-theme="light">
       <Container>
-        <Navbar.Brand href="#home" className="me-auto">بانک پارسیان</Navbar.Brand>
+        <Navbar.Brand href="#home" className={navbarstyle.title}>بانک پارسیان</Navbar.Brand>
         <Nav className="ms-auto">
-          <NavLink className="nav-link" to="/jadval">جدول</NavLink>
-          <NavLink className="nav-link" to="/">چارت</NavLink>
+          <NavLink className={navbarstyle.navlink} to="/jadval">جدول</NavLink>
+          <NavLink className={navbarstyle.navlink} to="/">چارت</NavLink>
         </Nav>
         <Nav>
           {isAuthenticated ? (
-            <Nav.Link className="nav-link" onClick={handleLogout}>خروج</Nav.Link>
+            <Nav.Link className={navbarstyle.navlink} onClick={handleLogout}>خروج</Nav.Link>
           ) : (
-            <NavLink className="nav-link" to="/login">ورود</NavLink>
+            <NavLink className={navbarstyle.navlink} to="/login">ورود</NavLink>
           )}
         </Nav>
       </Container>

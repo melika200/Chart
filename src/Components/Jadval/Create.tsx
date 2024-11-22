@@ -206,7 +206,7 @@ export const Createtable: React.FC = () => {
               sx={{ display: "flex", mt: 2 }}
             >
               <Button variant="contained" color="primary" type="submit">
-                Submit
+                Add
               </Button>
               <StyledLink to="/jadval" sx={{ml:"3px"}}>
                 <Button variant="outlined">Back</Button>
