@@ -54,28 +54,28 @@ const useRegistrationForm = () => {
         localStorage.setItem('isAuthenticated', 'true');
 
         Swal.fire({
-          title: 'Success!',
-          text: 'Login successful! Welcome back, supername.',
+          title: 'موفقیت آمیز!',
+          text: 'ورود شما با موفقیت انجام شد',
           icon: 'success',
-          confirmButtonText: 'OK',
+          confirmButtonText: 'بله',
         }).then(() => {
           dispatch(login(userData));
           navigate('/');
         });
       } else {
         Swal.fire({
-          title: 'Error!',
-          text: 'Invalid username or password.',
+          title: 'خطا!',
+          text: 'یوزرنیم یا پسورد نامعتبر هست',
           icon: 'error',
-          confirmButtonText: 'Try Again',
+          confirmButtonText: 'تلاش مجدد',
         });
       }
     } catch (error) {
       Swal.fire({
         title: 'Error!',
-        text: 'There was an issue processing your request.',
+        text: 'در فرایند مشکلی پیش آمده',
         icon: 'error',
-        confirmButtonText: 'Try Again',
+        confirmButtonText: 'تلاش مجدد',
       });
       console.log(error);
     }

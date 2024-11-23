@@ -1,5 +1,5 @@
-import { createSlice } from '@reduxjs/toolkit';
-import { RootState } from '../Auth/Store';
+import { createSlice } from "@reduxjs/toolkit";
+import { RootState } from "../Auth/Store";
 
 interface AuthState {
   isAuthenticated: boolean;
@@ -12,24 +12,25 @@ const initialState: AuthState = {
 };
 
 const authSlice = createSlice({
-  name: 'auth',
+  name: "auth",
   initialState,
   reducers: {
     login(state, action) {
       state.isAuthenticated = true;
       state.user = action.payload;
-      localStorage.setItem('user', JSON.stringify(action.payload));
-      localStorage.setItem('isAuthenticated', 'true');
+      localStorage.setItem("user", JSON.stringify(action.payload));
+      localStorage.setItem("isAuthenticated", "true");
     },
     logout(state) {
       state.isAuthenticated = false;
       state.user = null;
-      localStorage.removeItem('user');
-      localStorage.removeItem('isAuthenticated');
+      localStorage.removeItem("user");
+      localStorage.removeItem("isAuthenticated");
     },
     checkAuth(state) {
-      const user = JSON.parse(localStorage.getItem('user') || 'null');
-      const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
+      const user = JSON.parse(localStorage.getItem("user") || "null");
+      const isAuthenticated =
+        localStorage.getItem("isAuthenticated") === "true";
       if (user && isAuthenticated) {
         state.isAuthenticated = true;
         state.user = user;
@@ -41,5 +42,6 @@ const authSlice = createSlice({
 export const { login, logout, checkAuth } = authSlice.actions;
 export default authSlice.reducer;
 
-export const selectIsAuthenticated = (state: RootState) => state.auth.isAuthenticated;
+export const selectIsAuthenticated = (state: RootState) =>
+  state.auth.isAuthenticated;
 export const selectUser = (state: RootState) => state.auth.user;

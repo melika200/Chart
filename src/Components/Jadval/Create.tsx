@@ -31,7 +31,7 @@ type FormField = {
   summary: string;
   text: string;
   image: string;
-  newsGroupId:number
+  newsGroupId: number;
 };
 
 export const Createtable: React.FC = () => {
@@ -113,6 +113,7 @@ export const Createtable: React.FC = () => {
                     "& .MuiOutlinedInput-root": { borderColor: "lightgray" },
                     backgroundColor: "white",
                   }}
+                  inputProps={{ style: { textAlign: "right" } }}
                 />
               </Grid>
               <Grid item xs={6}>
@@ -128,6 +129,7 @@ export const Createtable: React.FC = () => {
                     "& .MuiOutlinedInput-root": { borderColor: "lightgray" },
                     backgroundColor: "white",
                   }}
+                  inputProps={{ style: { textAlign: "right" } }}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -143,6 +145,7 @@ export const Createtable: React.FC = () => {
                     "& .MuiOutlinedInput-root": { borderColor: "lightgray" },
                     backgroundColor: "white",
                   }}
+                  inputProps={{ style: { textAlign: "right" } }}
                 />
               </Grid>
               <Grid
@@ -150,14 +153,12 @@ export const Createtable: React.FC = () => {
                 xs={3}
                 sx={{
                   margin: "auto",
-                
                 }}
               >
                 <DropzoneArea
                   acceptedFiles={["image/*"]}
                   dropzoneText="Drag and drop an image here or click"
-                  onChange={
-                  (files) => {
+                  onChange={(files) => {
                     if (files && files.length > 0) {
                       setValue("image", "");
                     }
@@ -166,13 +167,11 @@ export const Createtable: React.FC = () => {
                 />
               </Grid>
             </Grid>
-            <Box
-              sx={{ display: "flex", mt: 2 }}
-            >
+            <Box sx={{ display: "flex", mt: 2 }}>
               <Button variant="contained" color="primary" type="submit">
                 Add
               </Button>
-              <StyledLink to="/jadval" sx={{ml:"3px"}}>
+              <StyledLink to="/jadval" sx={{ ml: "3px" }}>
                 <Button variant="outlined">Back</Button>
               </StyledLink>
             </Box>

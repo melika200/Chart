@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, Link as RouterLink } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import { useParams, Link as RouterLink } from "react-router-dom";
 import {
   Box,
   Typography,
@@ -7,19 +7,19 @@ import {
   CardContent,
   Button,
   Grid,
-} from '@mui/material';
-import Tabledata from '../../Services/Tableurl/Tabledata';
+} from "@mui/material";
+import Tabledata from "../../Services/Tableurl/Tabledata";
 
 interface DataType {
   id: number;
-  newsGroupId:number;
+  newsGroupId: number;
   title: string;
   summary: string;
   picture: string;
   text: string;
   isActive: boolean;
-  recordDateFa:string;
-  recordTime:string;
+  recordDateFa: string;
+  recordTime: string;
 }
 
 export const ReadTable: React.FC = () => {
@@ -31,9 +31,9 @@ export const ReadTable: React.FC = () => {
       try {
         const result = await Tabledata.get(`/merchantnew/News/Get/${id}`);
         setData(result.data.value);
-        console.log(result.data.value)
+        console.log(result.data.value);
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error("Error fetching data:", error);
       }
     };
 
@@ -45,31 +45,41 @@ export const ReadTable: React.FC = () => {
   }
 
   return (
-    <Box sx={{ p: 3 ,margin:"3rem auto",textAlign:"center",width:"45%"}}>
+    <Box sx={{ p: 3, margin: "3rem auto", textAlign: "center", width: "45%" }}>
       <Card>
         <CardContent>
-          <Typography variant="h5" sx={{marginBottom:"10px"}} gutterBottom>
-            Detail of User
+          <Typography
+            variant="h5"
+            sx={{
+              marginBottom: "10px",
+              borderBottom: "1px solid gray",
+              pb: "3px",
+            }}
+            gutterBottom
+          >
+            جزئیات کاربر
           </Typography>
-          <Grid container spacing={2}>
+          <Grid container spacing={2} sx={{ textAlign: "right", mt: "5px" }}>
             <Grid item xs={12}>
               <Typography variant="body1">
-                <strong>Title:</strong> {data.title}
+                <strong>عنوان:</strong> {data.title}
               </Typography>
             </Grid>
             <Grid item xs={12}>
               <Typography variant="body1">
-                <strong>Summary:</strong> {data.summary}
+                <strong>خلاصه:</strong> {data.summary}
               </Typography>
             </Grid>
             <Grid item xs={12}>
               <Typography variant="body1">
-                <strong>Picture:</strong> {data.picture}
+                <strong>:عکس </strong>
+                <br /> {data.picture}
               </Typography>
             </Grid>
             <Grid item xs={12}>
               <Typography variant="body1">
-                <strong>Text:</strong> {data.text}
+                <strong>:اطلاعات</strong>
+                <br /> {data.text}
               </Typography>
             </Grid>
           </Grid>
@@ -81,14 +91,10 @@ export const ReadTable: React.FC = () => {
               color="primary"
               sx={{ mr: 1 }}
             >
-              Edit
+              ویرایش
             </Button>
-            <Button
-              component={RouterLink}
-              to="/jadval"
-              variant="outlined"
-            >
-              Back
+            <Button component={RouterLink} to="/jadval" variant="outlined">
+              دیدن جدول
             </Button>
           </Box>
         </CardContent>

@@ -36,15 +36,17 @@ export const Jadval: React.FC = () => {
   const fetchData = async (currentPage: number, pageSize: number) => {
     try {
       const response = await Tabledata.get(
-          `/merchantnew/News/Search?_page=${currentPage + 1}&_limit=${pageSize}&IsActive=true`
+        `/merchantnew/News/Search?_page=${
+          currentPage + 1
+        }&_limit=${pageSize}&IsActive=true`
       );
       const formattedData: RowData[] = response.data.value.data.map(
-          (item: any) => ({
-            id: item.id,
-            title: item.title,
-            recordDateFa: item.recordDateFa,
-            position: item.isActive ? "فعال" : "غیر فعال",
-          })
+        (item: any) => ({
+          id: item.id,
+          title: item.title,
+          recordDateFa: item.recordDateFa,
+          position: item.isActive ? "فعال" : "غیر فعال",
+        })
       );
       setRows(formattedData);
       setTotalRows(response.data.value.total);
@@ -58,7 +60,7 @@ export const Jadval: React.FC = () => {
   }, [page, rowsPerPage]);
 
   const handleDelete = async (id: string) => {
-    const confirm = window.confirm("Would you like to delete?");
+    const confirm = window.confirm("حذف شود؟");
     if (confirm) {
       try {
         await Tabledata.put(`/merchantnew/News/ChangeStatus`, {
@@ -77,141 +79,163 @@ export const Jadval: React.FC = () => {
   };
 
   const handleChangeRowsPerPage = (
-      event: React.ChangeEvent<HTMLInputElement>
+    event: React.ChangeEvent<HTMLInputElement>
   ) => {
     setRowsPerPage(parseInt(event.target.value, 2));
     setPage(0);
   };
 
   return (
-      <>
-        <NavbarItem />
-        <Container maxWidth="lg">
-          <Box
-              sx={{
-                bgcolor: "background.paper",
-                height: "100vh",
-                py: 8,
-                direction: "rtl",
-              }}
+    <>
+      <NavbarItem />
+      <Container maxWidth="lg">
+        <Box
+          sx={{
+            bgcolor: "background.paper",
+            height: "100vh",
+            py: 8,
+            direction: "rtl",
+          }}
+        >
+          <TableContainer
+            component={Paper}
+            elevation={3}
+            sx={{ bgcolor: "#fff" }}
           >
-            <TableContainer
-                component={Paper}
-                elevation={3}
-                sx={{ bgcolor: "#fff" }}
+            <Box
+              sx={{ display: "flex", justifyContent: "space-between", p: 2 }}
             >
-              <Box sx={{ display: "flex", justifyContent: "space-between", p: 2 }}>
-                <Box
-                    sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}
-                >
-                  <FaBookOpen style={{ paddingLeft: "5px", fontSize: "19px" }} />
-                  <Typography variant="h6">لیست مدارک تحصیلی</Typography>
-                </Box>
-                <Button
-                    component={Link}
-                    to="/create"
-                    variant="contained"
-                    sx={{ direction: "ltr", backgroundColor: "#d35400" }}
-                >
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+              >
+                <FaBookOpen style={{ paddingLeft: "5px", fontSize: "19px" }} />
+                <Typography variant="h6">لیست مدارک تحصیلی</Typography>
+              </Box>
+              <Button
+                component={Link}
+                to="/create"
+                variant="contained"
+                sx={{ direction: "ltr", backgroundColor: "#d35400" }}
+              >
                 <span style={{ alignItems: "center" }}>
                   افزودن مدرک تحصیلی
                   <span style={{ fontSize: "15px" }}>
                     <CgFileDocument />
                   </span>
                 </span>
-                </Button>
-              </Box>
-              <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                <TableHead>
-                  <TableRow sx={{ bgcolor: "#f5f5f561" }}>
+              </Button>
+            </Box>
+            <Table sx={{ minWidth: 650 }} aria-label="simple table">
+              <TableHead>
+                <TableRow sx={{ bgcolor: "#f5f5f561" }}>
+                  <TableCell
+                    sx={{
+                      borderBottom: "1px solid gray",
+                      fontWeight: "bold",
+                      textAlign: "center",
+                    }}
+                  >
+                    مقطع تحصیلی
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      borderBottom: "1px solid gray",
+                      fontWeight: "bold",
+                      textAlign: "center",
+                    }}
+                  >
+                    وضعیت
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      borderBottom: "1px solid gray",
+                      fontWeight: "bold",
+                      textAlign: "center",
+                    }}
+                  >
+                    تاریخ
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      borderBottom: "1px solid gray",
+                      fontWeight: "bold",
+                      textAlign: "center",
+                    }}
+                  >
+                    عملیات
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {rows.map((row) => (
+                  <TableRow
+                    key={row.id}
+                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                  >
                     <TableCell
-                        sx={{ borderBottom: "1px solid gray", fontWeight: "bold" }}
+                      component="th"
+                      scope="row"
+                      sx={{ textAlign: "center", direction: "rtl" }}
                     >
-                      مقطع تحصیلی
+                       {row.title}
                     </TableCell>
-                    <TableCell
-                        sx={{ borderBottom: "1px solid gray", fontWeight: "bold" }}
-                    >
-                      وضعیت
+                    <TableCell sx={{ textAlign: "center", direction: "rtl" }}>
+                      {row.position}
                     </TableCell>
-                    <TableCell
-                        sx={{ borderBottom: "1px solid gray", fontWeight: "bold" }}
-                    >
-                      تاریخ
+                    <TableCell sx={{ textAlign: "center", direction: "rtl" }}>
+                      {row.recordDateFa}
                     </TableCell>
-                    <TableCell
-                        sx={{ borderBottom: "1px solid gray", fontWeight: "bold" }}
-                    >
-                      عملیات
+                    <TableCell>
+                      <Button
+                        component={Link}
+                        to={`/read/${row.id}`}
+                        variant="contained"
+                        size="small"
+                        sx={{ mr: 1 }}
+                        startIcon={<MdReadMore />}
+                      >
+                        مشاهده
+                      </Button>
+                      <Button
+                        component={Link}
+                        to={`/update/${row.id}`}
+                        variant="contained"
+                        size="small"
+                        sx={{ mx: 1 }}
+                        startIcon={<MdEdit />}
+                      >
+                        ویرایش
+                      </Button>
+                      <Button
+                        onClick={() => handleDelete(row.id)}
+                        variant="contained"
+                        color="error"
+                        size="small"
+                        startIcon={<MdDelete />}
+                      >
+                        حذف
+                      </Button>
                     </TableCell>
                   </TableRow>
-                </TableHead>
-                <TableBody>
-                  {rows.map((row) => (
-                      <TableRow
-                          key={row.id}
-                          sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                      >
-                        <TableCell
-                            component="th"
-                            scope="row"
-                            sx={{ textAlign: "right", direction: "rtl" }}
-                        >
-                          {row.id} {row.title}
-                        </TableCell>
-                        <TableCell sx={{ textAlign: "right", direction: "rtl" }}>
-                          {row.position}
-                        </TableCell>
-                        <TableCell sx={{ textAlign: "right", direction: "rtl" }}>
-                          {row.recordDateFa}
-                        </TableCell>
-                        <TableCell>
-                          <Button
-                              component={Link}
-                              to={`/read/${row.id}`}
-                              variant="contained"
-                              size="small"
-                              sx={{ mr: 1 }}
-                              startIcon={<MdReadMore />}
-                          >
-                            مشاهده
-                          </Button>
-                          <Button
-                              component={Link}
-                              to={`/update/${row.id}`}
-                              variant="contained"
-                              size="small"
-                              sx={{ mx: 1 }}
-                              startIcon={<MdEdit />}
-                          >
-                            ویرایش
-                          </Button>
-                          <Button
-                              onClick={() => handleDelete(row.id)}
-                              variant="contained"
-                              color="error"
-                              size="small"
-                              startIcon={<MdDelete />}
-                          >
-                            حذف
-                          </Button>
-                        </TableCell>
-                      </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-              <TablePagination
-                  rowsPerPageOptions={[5, 10, 25]}
-                  component="div"
-                  count={totalRows}
-                  rowsPerPage={rowsPerPage}
-                  page={page}
-                  onPageChange={handleChangePage}
-                  onRowsPerPageChange={handleChangeRowsPerPage}
-              />
-            </TableContainer>
-          </Box>
-        </Container>
-      </>
+                ))}
+              </TableBody>
+            </Table>
+            <TablePagination
+              rowsPerPageOptions={[5, 10, 25]}
+              component="div"
+              count={totalRows}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
+          </TableContainer>
+        </Box>
+      </Container>
+    </>
   );
 };
